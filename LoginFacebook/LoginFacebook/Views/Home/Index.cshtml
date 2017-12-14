@@ -1,0 +1,85 @@
+﻿@{ 
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Facebook Login</title>
+
+    <script>
+
+        // funcao sera chamada quando usuario finalizar o processo executado
+        // pelo botao de Login
+        function checkLoginState() {
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    if (response.authResponse) {
+                        FB.api('/me?fields=id,name,gender,email', LoadValues);
+                    }
+                } else if (response.status === 'not_authorized') {
+                    // Usuario logado no facebook, mas nao aceitou o App
+                } else {
+                    // Usuario nao logado no facebook
+                }
+            });
+        }
+
+        function LoadValues(me) {
+            alert(me.email);
+        }
+
+        //// verifica permissios aceitas
+        //function checkPermission() {
+        //    FB.api('/me/permissions', function (response) {
+
+        //        var permissions = [];
+
+        //        FB.api('/me?fields=id,name,email', function (e)
+        //        {
+        //            alert(e[0]);
+        //        });
+
+        //        response.data.forEach(function (entry) {
+        //            if (entry.status == 'granted') {
+        //                permissions.push(entry.permission);
+
+        //            }
+        //        });
+
+        //        // verifica permissao
+        //        if (permissions.indexOf('publish_actions') >= 0) {
+        //            // usuario aceitou publish_actions
+        //        }
+        //    });
+        //}
+    </script>
+</head>
+
+<body>
+
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '<ID do Aplicativo >', // seu APP ID
+                cookie: true, // habilita cookies para permitir o servidor acessar a sessao
+                xfbml: true, // processa plugins sociais nessa pagina
+                version: 'v2.4' // versao da Graph API usada
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/pt_BR/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <!-- plugin social de Login -->
+    <fb:login-button scope="email,publish_actions,public_profile" onlogin="checkLoginState();"></fb:login-button>
+
+</body>
+</html>
